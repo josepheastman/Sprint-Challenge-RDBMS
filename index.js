@@ -29,6 +29,24 @@ server.get("/api/projects", (req, res) => {
       );
   });
 
+  server.get("/api/projects/:id", (req, res) => {
+      const { id } = req.params
+    db("projects")
+      .where({ id: id })
+      .then(project => {
+        if (project) {
+          res.status(200).json(project);
+        } else {
+          res.status(404).json({ error: "Project not found" });
+        }
+      })
+      .catch(err =>
+        res
+          .status(500)
+          .json({ error: "The project information could not be retrieved." })
+      );
+  });
+
   server.get("/api/projects/:id/actions", (req, res) => {
       const { id } = req.params
     db("projects")
@@ -62,6 +80,39 @@ server.post("/api/projects", (req, res) => {
       });
   });
 
+  server.delete("/api/projects/:id", (req, res) => {
+      const { id } = req.params
+    db("projects")
+      .where({ id: id })
+      .del()
+      .then(count => {
+        if (count) {
+          res.status(200).json(count);
+        } else {
+          res.status(404).json({ error: "Project not found" });
+        }
+      })
+      .catch(err =>
+        res.status(500).json({ error: "The project could not be removed." })
+      );
+  });
+
+  server.put("/api/projects/:id", (req, res) => {
+    const changes = req.body;
+    const { id } = req.params
+    db("projects")
+      .where({ id: id })
+      .update(changes)
+      .then(count => {
+        res.status(200).json(count);
+      })
+      .catch(err =>
+        res
+          .status(500)
+          .json({ error: "The project information could not be modified." })
+      );
+  });
+
 
   // ** ACTIONS **
   server.get("/api/actions", (req, res) => {
@@ -80,6 +131,24 @@ server.post("/api/projects", (req, res) => {
       );
   });
 
+  server.get("/api/actions/:id", (req, res) => {
+      const { id } = req.params
+    db("actions")
+      .where({ id: id })
+      .then(action => {
+        if (action) {
+          res.status(200).json(action);
+        } else {
+          res.status(404).json({ error: "Action not found" });
+        }
+      })
+      .catch(err =>
+        res
+          .status(500)
+          .json({ error: "The action information could not be retrieved." })
+      );
+  });
+
   server.post("/api/actions", (req, res) => {
     const changes = req.body;
   
@@ -93,6 +162,39 @@ server.post("/api/projects", (req, res) => {
           error: "There was an error while saving the action to the database."
         });
       });
+  });
+
+  server.delete("/api/actions/:id", (req, res) => {
+      const { id } = req.params
+    db("actions")
+      .where({ id: id })
+      .del()
+      .then(count => {
+        if (count) {
+          res.status(200).json(count);
+        } else {
+          res.status(404).json({ error: "Action not found" });
+        }
+      })
+      .catch(err =>
+        res.status(500).json({ error: "The action could not be removed." })
+      );
+  });
+
+  server.put("/api/actions/:id", (req, res) => {
+    const changes = req.body;
+    const { id } = req.params
+    db("actions")
+      .where({ id: id })
+      .update(changes)
+      .then(count => {
+        res.status(200).json(count);
+      })
+      .catch(err =>
+        res
+          .status(500)
+          .json({ error: "The action information could not be modified." })
+      );
   });
 
 
